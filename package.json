@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "server for projector-pro-mobile",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "ip": "^1.1.5",
+    "sqlite3": "^4.1.1",
+    "sqlstring": "^2.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheUnliked/Projector-Pro-Mobile.git"
+  },
+  "author": "Adam Ye",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheUnliked/Projector-Pro-Mobile/issues"
+  },
+  "homepage": "https://github.com/TheUnliked/Projector-Pro-Mobile#readme"
+}
