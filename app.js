@@ -14,6 +14,8 @@ let db = new sqlite.Database('./database.db', sqlite.OPEN_READWRITE, (err) => {
     console.log('DB Connection opened successfully');
 });
 
+
+
 app.listen(port, () => {
     console.log(`Listening at ${ip.address()}:${port}`);
 });
@@ -93,7 +95,7 @@ function CreateSessionId() {
     while (newId == 0 || newId in ids) {
         newId = Math.floor(1000 + Math.random() * 9000);
     }
-    sql = SqlString.format("INSERT INTO Session (SessionCode) VALUES (?);", [newId]);
+    sql = SqlString.format("INSERT INTO Session (SessionCode, SongID) VALUES (?, -1);", [newId]);
     db.run(sql, (err) => {
         if (err) {
             console.log(err.message);
@@ -109,6 +111,21 @@ app.get('/api/session/last-session-id', (req, res) => {
     let sql = SqlString.format("SELECT SessionCode FROM Session ORDER BY ID DESC LIMIT 1");
     db.get(sql, (err, item) => {
         res.send(item.SessionCode.toString());
+    });
+});
+
+/**
+ * Route which returns the song id for the current session. sends 304 not modified status if it has not changed
+ */
+app.get('/api/session/get-session-changes', (req, res) => {
+    let sql = SqlString.format("SELECT SongID FROM Session WHERE SessionCode = ? LIMIT 1", [req.query.code]);
+    db.get(sql, (err, item) => {
+        if (req.query.id.toString() == item.SongID.toString()) {
+            res.status(304);
+            res.send("");
+        } else {
+            res.send(item.SongID.toString());
+        }
     });
 });
 
