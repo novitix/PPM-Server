@@ -20,6 +20,11 @@ app.listen(port, () => {
     console.log(`Listening at ${ip.address()}:${port}`);
 });
 
+app.get('/', (req, res) => {
+    res.sendFile('landingpage/index.html', {root: __dirname})
+});
+
+
 app.get('/api/songs', (req, res) => {
     switch(Object.keys(req.query)[0]) {
         case 'id':
