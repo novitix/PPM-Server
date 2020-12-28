@@ -2,7 +2,7 @@ let ip = require('ip');
 let SqlString = require('sqlstring');
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 2344;
 const bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 let sqlite = require('sqlite3').verbose();
@@ -105,7 +105,7 @@ function CreateSessionId() {
 }
 
 /**
- * Route which returns the last session's ID. Used in the API in conjunction with create session.
+ * Route which returns the last session's ID. Used in conjunction with create session.
  */
 app.get('/api/session/last-session-id', (req, res) => {
     let sql = SqlString.format("SELECT SessionCode FROM Session ORDER BY ID DESC LIMIT 1");
@@ -120,10 +120,16 @@ app.get('/api/session/last-session-id', (req, res) => {
 app.get('/api/session/get-session-changes', (req, res) => {
     let sql = SqlString.format("SELECT SongID FROM Session WHERE SessionCode = ? LIMIT 1", [req.query.code]);
     db.get(sql, (err, item) => {
+        if (item == undefined) {
+            res.status(400) // session code does not exist
+            res.send("");
+        }
         if (req.query.id.toString() == item.SongID.toString()) {
+            console.log("Returning session changes - Not Modified");
             res.status(304);
             res.send("");
         } else {
+            console.log("Returning session changes - Changed ?", [item.SongID.toString()]);
             res.send(item.SongID.toString());
         }
     });
@@ -137,6 +143,16 @@ app.post('/api/session/update-session', jsonParser, (req, res) => {
     db.run(sql);
     console.log("Update Session " + req.body.sessionCode + " with Id " + req.body.songId);
     res.end("Updated session");
+});
+
+/**
+ * Client sends a session code and the server responds with whether or not the code exists.
+ */
+app.get('/api/session/get-session-exists', (req, res) => {
+    let sql = SqlString.format("SELECT SongID FROM Session WHERE SessionCode = ?;", [req.query.code]);
+    db.get(sql, (err, item) => {
+        res.send(item != undefined)
+    });
 });
 
 process.on('SIGINT', () => {
