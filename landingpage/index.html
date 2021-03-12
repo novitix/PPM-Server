@@ -10,9 +10,15 @@
 
 <body>
     <div id="foreground-box">
-        <div id="content">
-            <h1>API for Lyrical - Church Songs Displayer</h1>
-            Visit the <a href='https://github.com/novitix/PPM-Server'>GitHub project</a> for more info.
+        <div id="inner-box">
+            <div style="font-size: 4em;" class="text-centre">API for Lyrical</div><br>
+            <div class="text-centre">View christian hymns directly from your phone.</div><br>
+            <div style="display: flex; justify-content: center;">
+                <a href='https://play.google.com/store/apps/details?id=com.ppp.lyrical&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img class="download-badge" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+            </div>
+            <div class="text-centre">
+                <br>Visit the <a href='https://github.com/novitix/PPM-Server'>GitHub project</a> for more information.
+            </div>
         </div>
     </div>
 </body>
@@ -25,17 +31,42 @@
     }
     #foreground-box {
         background-color: #202225;
+        color: white;
         position: absolute;
-        left: 50%;
-        top: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-        padding: 5%;
-        border-radius: 25px;
+        width: 70%;
+        height: 70%;
+        border-radius: 40px;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        
+        margin: auto;
+
+        display: flex;
+        align-items: center;
+    }
+
+    #inner-box {
+top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        
+        margin: auto;
     }
 
     #content {
         color: white;
+    }
+
+    .download-badge {
+        width: 25em;
+    }
+
+    .text-centre {
+        text-align: center;
+        font-size: 1.5em;
     }
 
     a:link, a:visited {
