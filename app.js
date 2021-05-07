@@ -69,7 +69,7 @@ function SendInfoByNumber(number, res) {
  * @param {object} res 
  */
 function SendInfoByFilter(filter, res) {
-    max_rows = 10
+    max_rows = 25
     let sql = SqlString.format("SELECT ID, Title, Number, Key FROM Songs WHERE Body LIKE ? LIMIT ?;", ['%' + filter + '%', max_rows]);
     //console.log(sql);
 
