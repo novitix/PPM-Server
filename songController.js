@@ -24,7 +24,7 @@ module.exports = {
 /**
  * Searches records in the Songs table with the sogn number and sends the first 10 found records using the provided res object.
  * @param {string} filter 
- * @param {object} res 
+ * @param {object} res z
  */
  function SearchBySongNumber(number, res) {
     let sql = SqlString.format("SELECT ID, Title, Number, Key FROM Songs WHERE (Number = ?) LIMIT ?;", [number, MAX_SEARCH_ROWS]);

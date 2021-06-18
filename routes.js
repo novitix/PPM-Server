@@ -6,6 +6,25 @@ var router = express.Router();
 const bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 
+
+
+// SONG HANDLING
+
+/**
+ * Takes an ID and returns the song's data (Title, Body, Key, etc).
+ */
+ router.route('/api/songs/get-song').get(songController.getSong);
+
+ /**
+  * Takes a filter and returns the a list of matching songs with their (ID, Title, Number, Key).
+  */
+ router.route('/api/songs/search').get(songController.search);
+
+
+
+
+// SESSION HANDLING
+
 /**
  * Route which returns the last session's ID. Used in conjunction with create session.
  */
@@ -27,13 +46,10 @@ router.route('/api/session/update-session').post(sessionController.updateSession
  */
 router.route('/api/session/get-session-exists').get(sessionController.checkSessionExists);
 
-// Session Handling
+/**
+ * Creates a new session code in the database.
+ */
 router.route('/api/session/create-session').post(sessionController.createSession);
 
-
-
-router.route('/api/songs/get-song').get(songController.getSong);
-
-router.route('/api/songs/search').get(songController.search);
 
 module.exports = router;
