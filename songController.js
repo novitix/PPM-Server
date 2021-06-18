@@ -50,7 +50,11 @@ function SearchByFilter(filter, res) {
             });
 }
 
-
+/**
+ * Returns song data which matches the given ID.
+ * @param {int} id 
+ * @param {object} res 
+ */
 function SendSongById(id, res) {
     db.get(`SELECT Book, Number, Title, Key, Body
     FROM Songs
