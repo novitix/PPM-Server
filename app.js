@@ -7,13 +7,14 @@ const bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 let sqlite = require('sqlite3').verbose();
 
+const MAX_SEARCH_ROWS = 25;
+
 console.log("PPM Server - v1.1");
 
 let db = new sqlite.Database('./database.db', sqlite.OPEN_READWRITE, (err) => {
     if (err) console.log('Database Open Error', err.message);
     console.log('DB Connection opened successfully');
 });
-
 
 
 app.listen(port, () => {
@@ -25,38 +26,25 @@ app.get('/', (req, res) => {
 });
 
 
-app.get('/api/songs', (req, res) => {
+app.get('/api/songs/search', (req, res) => {
     switch(Object.keys(req.query)[0]) {
-        case 'id':
-            SendBodyById(req.query.id,res);
-            break;
         case 'number':
-            SendInfoByNumber(req.query.number,res);
+            SearchBySongNumber(req.query.number,res);
             break;
         case 'filter':
-            SendInfoByFilter(req.query.filter, res);
+            SearchByFilter(req.query.filter, res);
             break;
     }
 });
 
-function SendBodyById(id, res) {
-    db.get(`SELECT Body
-    FROM Songs
-    WHERE (ID = ?);`,[id], (err, item) => {
-        console.log(err ? err.message : 'Query by ID successful');
-        //console.log('sent', item)
-        res.send(item);
-        return;
-    });
-}
-
-function SendInfoByNumber(number, res) {
-    db.all(`SELECT ID,
-            Title,
-            Number,
-            Key
-        FROM Songs
-        WHERE (Number = $number);`, {$number: number}, (err, items) => {
+/**
+ * Searches records in the Songs table with the sogn number and sends the first 10 found records using the provided res object.
+ * @param {string} filter 
+ * @param {object} res 
+ */
+function SearchBySongNumber(number, res) {
+    let sql = SqlString.format("SELECT ID, Title, Number, Key FROM Songs WHERE (Number = ?) LIMIT ?;", [number, MAX_SEARCH_ROWS]);
+    db.all(sql, (err, items) => {
             console.log(err ? err.message : 'Query by number successful');
             res.send(items);
             return;
@@ -68,16 +56,30 @@ function SendInfoByNumber(number, res) {
  * @param {string} filter 
  * @param {object} res 
  */
-function SendInfoByFilter(filter, res) {
-    max_rows = 25
-    let sql = SqlString.format("SELECT ID, Title, Number, Key FROM Songs WHERE Body LIKE ? LIMIT ?;", ['%' + filter + '%', max_rows]);
-    //console.log(sql);
+function SearchByFilter(filter, res) {
+    let sql = SqlString.format("SELECT ID, Title, Number, Key FROM Songs WHERE Body LIKE ? LIMIT ?;", ['%' + filter + '%', MAX_SEARCH_ROWS]);
 
     db.all(sql, (err, items) => {
             console.log(err ? err.message : 'Query by filter successful');
             res.send(items);
             return;
             });
+}
+
+app.get('/api/songs/get-song', (req, res) => {
+    if (Object.keys(req.query)[0] == "id") {
+        SendSongById(req.query.id,res);
+    }
+});
+function SendSongById(id, res) {
+    db.get(`SELECT Book, Number, Title, Key, Body
+    FROM Songs
+    WHERE (ID = ?);`,[id], (err, item) => {
+        console.log(err ? err.message : 'Query by ID successful');
+        //console.log('sent', item)
+        res.send(item);
+        return;
+    });
 }
 
 // Session Handling
