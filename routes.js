@@ -1,9 +1,11 @@
 var express = require('express')
 var songController = require('./songController');
 var sessionController = require('./sessionController');
+var serviceController = require('./serviceController')
 var router = express.Router();
 
 const bodyParser = require('body-parser');
+const { sendAndroidPlayStoreLink } = require('./serviceController');
 var jsonParser = bodyParser.json();
 
 
@@ -50,6 +52,14 @@ router.route('/api/session/get-session-exists').get(sessionController.checkSessi
  * Creates a new session code in the database.
  */
 router.route('/api/session/create-session').post(sessionController.createSession);
+
+
+
+// SERVICE HANDLING
+router.route('/').get(serviceController.sendWebpage);
+router.route('/api/version').get(serviceController.sendVersion);
+router.route('/android-play-store').get(serviceController.sendAndroidPlayStoreLink);
+router.route('/ios-app-store').get(serviceController.sendiOSAppStoreLink);
 
 
 module.exports = router;
