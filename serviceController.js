@@ -1,5 +1,5 @@
 let SqlString = require('sqlstring');
-const SERVER_VERSION = '1.2.0';
+const SERVER_VERSION = '1.3.0';
 const PLAY_STORE_LINK = 'https://play.google.com/store/apps/details?id=com.companyname.projectorpromobile&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
 const APP_STORE_LINK = 'https://www.google.com/'
 
@@ -14,11 +14,11 @@ module.exports = {
     },
 
     sendAndroidPlayStoreLink : function(req, res) {
-        res.send(PLAY_STORE_LINK)
+        res.send(PLAY_STORE_LINK);
     },
 
     sendiOSAppStoreLink : function(req, res) {
-        res.send(APP_STORE_LINK) // TODO
+        res.send(APP_STORE_LINK); // TODO
     },
 
     SERVER_VERSION
