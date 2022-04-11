@@ -27,7 +27,7 @@ module.exports = {
  * @param {object} res z
  */
  function SearchBySongNumber(number, res) {
-    let sql = SqlString.format("SELECT ID, Title, Number, Key FROM Songs WHERE (Number = ?) LIMIT ?;", [number, MAX_SEARCH_ROWS]);
+    let sql = SqlString.format("SELECT ID, Title FROM Songs WHERE (Number = ?) LIMIT ?;", [number, MAX_SEARCH_ROWS]);
     db.all(sql, (err, items) => {
             console.log(err ? err.message : 'Query by number successful');
             res.send(items);
@@ -41,7 +41,7 @@ module.exports = {
  * @param {object} res 
  */
 function SearchByFilter(filter, res) {
-    let sql = SqlString.format("SELECT ID, Title, Number, Key FROM Songs WHERE Body LIKE ? LIMIT ?;", ['%' + filter + '%', MAX_SEARCH_ROWS]);
+    let sql = SqlString.format("SELECT ID, Title FROM Songs WHERE Body LIKE ? LIMIT ?;", ['%' + filter + '%', MAX_SEARCH_ROWS]);
 
     db.all(sql, (err, items) => {
             console.log(err ? err.message : 'Query by filter successful');
@@ -56,7 +56,7 @@ function SearchByFilter(filter, res) {
  * @param {object} res 
  */
 function SendSongById(id, res) {
-    db.get(`SELECT Book, Number, Title, Key, Body
+    db.get(`SELECT ID, Title, Book, Number, Title, Key, Body
     FROM Songs
     WHERE (ID = ?);`,[id], (err, item) => {
         console.log(err ? err.message : 'Query by ID successful');

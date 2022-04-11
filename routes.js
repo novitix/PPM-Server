@@ -35,7 +35,7 @@ router.route('/api/session/last-session-id').get(sessionController.getLastSessio
 /**
  * Route which returns the song id for the current session. sends 304 not modified status if it has not changed
  */
- router.route('/api/session/get-session-changes').get(sessionController.getSessionChanges);
+ router.route('/api/session/get-session-song-id').get(sessionController.getSessionSongId);
 
 /**
  * Changes to the session are pushed here.

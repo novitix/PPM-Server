@@ -10,28 +10,23 @@ module.exports = {
         });
     },
 
-    getSessionChanges : function(req, res) {
-        let sql = SqlString.format("SELECT SongID FROM Session WHERE SessionCode = ? LIMIT 1", [req.query.code]);
+        getSessionSongId : function(req, res) {
+        let sql = SqlString.format("SELECT SongID FROM Session WHERE SessionCode = ? LIMIT 1", [req.query.sessionCode]);
         db.get(sql, (err, item) => {
             if (item == undefined) {
                 res.status(400) // session code does not exist
-                res.send("");
+                res.send("Session code does not exist.");
+                return;
             }
-            if (req.query.id.toString() == item.SongID.toString()) {
-                console.log("Returning session changes - Not Modified");
-                res.status(304);
-                res.send("");
-            } else {
-                console.log("Returning session changes - Changed ?", [item.SongID.toString()]);
-                res.send(item.SongID.toString());
-            }
+            console.log("Returning session song id ?", [item.SongID.toString()]);
+            res.send(item.SongID.toString());
         });
     },
 
     updateSession : function(req, res) {
-        let sql = SqlString.format("UPDATE Session SET SongID = ? WHERE SessionCode = ?;", [req.body.songId, req.body.sessionCode]);
+        let sql = SqlString.format("UPDATE Session SET SongID = ? WHERE SessionCode = ?;", [req.body.songID, req.body.sessionCode]);
         db.run(sql);
-        console.log("Update Session " + req.body.sessionCode + " with Id " + req.body.songId);
+        console.log("Update Session " + req.body.sessionCode + " with Id " + req.body.songID);
         res.end("Updated session");
     },
 
@@ -42,16 +37,23 @@ module.exports = {
         });
     },
 
-    createSession : function (req, res) {
-        CreateSessionId();
-        res.end("Added session");
+    createSession : async function (req, res) {
+        try {
+            let newId = await CreateSessionId();
+            res.send(newId);
+        } catch (err) {
+            console.log(err)
+        }
+        
+
+        
     }
 }
 
 /**
  * Generates a random session code and adds it to the database.
  */
-function CreateSessionId() {
+    function CreateSessionId() {
     let ids = [];
     let sql = SqlString.format("SELECT SessionCode FROM Session");
     db.all(sql, (err, items) => {
@@ -63,10 +65,10 @@ function CreateSessionId() {
         newId = Math.floor(1000 + Math.random() * 9000);
     }
     sql = SqlString.format("INSERT INTO Session (SessionCode, SongID) VALUES (?, -1);", [newId]);
-    db.run(sql, (err) => {
-        if (err) {
-            console.log(err.message);
-        }
-        console.log("Inserted new session code: " + newId.toString());
-    });
+    return new Promise((res, rej) => {
+        db.run(sql, (err) => {
+            if (err) rej(err)
+            res(newId.toString());
+        });
+    }) 
 }

@@ -17,6 +17,6 @@ app.listen(port, () => {
 
 
 
- process.on('SIGINT', () => {
+process.on('SIGINT', () => {
     db.close();
 });
