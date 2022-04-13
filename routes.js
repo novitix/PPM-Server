@@ -46,7 +46,7 @@ router.route('/api/session/update-session').post(sessionController.updateSession
 /**
  * Client sends a session code and the server responds with whether or not the code exists.
  */
-router.route('/api/session/get-session-exists').get(sessionController.checkSessionExists);
+router.route('/api/session/check-session-exists').get(sessionController.checkSessionExists);
 
 /**
  * Creates a new session code in the database.

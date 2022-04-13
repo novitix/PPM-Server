@@ -31,7 +31,7 @@ module.exports = {
     },
 
     checkSessionExists : function (req, res) {
-        let sql = SqlString.format("SELECT SongID FROM Session WHERE SessionCode = ?;", [req.query.code]);
+        let sql = SqlString.format("SELECT ID FROM Session WHERE SessionCode = ?;", [req.query.sessionCode]);
         db.get(sql, (err, item) => {
             res.send(item != undefined)
         });
